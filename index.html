@@ -76,10 +76,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 .modal h2 { font-size: 15px; font-weight: 600; margin-bottom: 14px; color: #1a1a1a; }
 .ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .ba-label { font-size: 12px; font-weight: 600; color: #003399; margin-bottom: 8px; padding: 4px 8px; background: #dde5ff; border-radius: 8px; display: inline-block; }
-.rating-row { display: flex; align-items: center; gap: 4px; margin-bottom: 7px; flex-wrap: nowrap; }
-.rating-label { font-size: 11px; color: #666; width: 72px; flex-shrink: 0; }
+.rating-row { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
+.rating-label { font-size: 11px; color: #666; }
 .dots-wrap { display: flex; gap: 3px; flex-shrink: 0; }
-.dot-hint { font-size: 10px; color: #aaa; margin-left: 2px; min-width: 44px; }
+.dot-hint { font-size: 10px; color: #aaa; margin-left: 4px; }
 .record-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
 .record-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
 .record-num { font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 8px; background: #dde5ff; color: #003399; flex-shrink: 0; }
@@ -122,8 +122,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 @media (max-width: 559px) {
   .field-row { grid-template-columns: 1fr; }
   .field-row.triple { grid-template-columns: 1fr 1fr; }
-  .ba-grid { grid-template-columns: 1fr; }
-  .ba-display-grid { grid-template-columns: 1fr; }
+  /* ba-grid 2col on mobile */
+  /* ba-display-grid 2col on mobile */
   .karte-header-btns { width: 100%; }
   .karte-header-btns .btn { flex: 1; text-align: center; }
   .actions { justify-content: stretch; }
