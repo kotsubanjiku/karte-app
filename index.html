@@ -14,9 +14,9 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; background: #f5f5f7; color: #1a1a1a; }
 .app { max-width: 720px; margin: 0 auto; padding: 1rem; }
-.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-.header h1 { font-size: 18px; font-weight: 600; color: #1a1a1a; }
-.header-btns { display: flex; gap: 8px; align-items: center; }
+.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; gap: 8px; }
+.header h1 { font-size: 16px; font-weight: 600; color: #1a1a1a; flex-shrink: 0; }
+.header-btns { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 .tab-bar { display: flex; gap: 8px; margin-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0; }
 .tab { font-size: 13px; padding: 6px 14px; cursor: pointer; border-radius: 6px 6px 0 0; color: #666; border: 1px solid transparent; background: transparent; border-bottom: none; }
 .tab.active { color: #1a1a1a; background: #fff; border-color: #e0e0e0; border-bottom-color: #fff; position: relative; top: 1px; }
@@ -24,32 +24,32 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 .client-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; }
 .client-card:hover { border-color: #ccc; }
 .avatar { width: 40px; height: 40px; border-radius: 50%; background: #dde5ff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #003399; flex-shrink: 0; }
-.client-info { flex: 1; }
-.client-name { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+.client-info { flex: 1; min-width: 0; }
+.client-name { font-size: 15px; font-weight: 600; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .client-meta { font-size: 12px; color: #888; margin-top: 2px; }
-.status-badge { font-size: 11px; padding: 2px 8px; border-radius: 6px; flex-shrink: 0; }
+.status-badge { font-size: 11px; padding: 2px 8px; border-radius: 6px; flex-shrink: 0; white-space: nowrap; }
 .status-妊娠中 { background: #e8f5e9; color: #2e7d32; }
 .status-産後 { background: #fff8e1; color: #f57f17; }
 .status-その他 { background: #f5f5f5; color: #666; }
-.btn { font-size: 13px; padding: 7px 16px; border: 1px solid #ccc; border-radius: 8px; cursor: pointer; background: transparent; color: #1a1a1a; }
+.btn { font-size: 13px; padding: 7px 16px; border: 1px solid #ccc; border-radius: 8px; cursor: pointer; background: transparent; color: #1a1a1a; white-space: nowrap; }
 .btn:hover { background: #f5f5f5; }
 .btn-primary { background: #003399; color: #fff; border-color: transparent; }
 .btn-primary:hover { background: #002277; }
 .btn-sm { font-size: 12px; padding: 4px 10px; }
-.btn-sort { font-size: 12px; padding: 4px 12px; border: 1px solid #ccc; border-radius: 8px; cursor: pointer; background: transparent; color: #666; display: flex; align-items: center; gap: 5px; }
+.btn-sort { font-size: 12px; padding: 4px 12px; border: 1px solid #ccc; border-radius: 8px; cursor: pointer; background: transparent; color: #666; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
 .btn-sort:hover { background: #f5f5f5; }
-.btn-export { font-size: 12px; padding: 5px 12px; border: 1px solid #003399; border-radius: 8px; cursor: pointer; background: transparent; color: #003399; }
+.btn-export { font-size: 12px; padding: 5px 12px; border: 1px solid #003399; border-radius: 8px; cursor: pointer; background: transparent; color: #003399; white-space: nowrap; }
 .btn-export:hover { background: #dde5ff; }
-.btn-import { font-size: 12px; padding: 5px 12px; border: 1px solid #ccc; border-radius: 8px; cursor: pointer; background: transparent; color: #666; }
+.btn-import { font-size: 12px; padding: 5px 12px; border: 1px solid #ccc; border-radius: 8px; cursor: pointer; background: transparent; color: #666; white-space: nowrap; }
 .btn-import:hover { background: #f5f5f5; }
-.form-section { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; }
+.form-section { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
 .section-title { font-size: 13px; font-weight: 600; color: #666; margin-bottom: 12px; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
 .field-row.single { grid-template-columns: 1fr; }
 .field-row.triple { grid-template-columns: 1fr 1fr 1fr; }
 .field { display: flex; flex-direction: column; gap: 4px; }
 .field label { font-size: 12px; color: #666; }
-.field input, .field select, .field textarea { font-size: 14px; padding: 7px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; font-family: inherit; }
+.field input, .field select, .field textarea { font-size: 14px; padding: 7px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; color: #1a1a1a; font-family: inherit; width: 100%; }
 .field textarea { resize: vertical; min-height: 72px; }
 .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: #003399; background: #fff; }
 .sub-field { margin-top: 8px; padding: 10px 12px; background: #fafafa; border-radius: 8px; border: 1px solid #e8e8e8; }
@@ -57,7 +57,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 .sub-field input { font-size: 13px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 8px; background: #fff; color: #1a1a1a; font-family: inherit; width: 100%; }
 .dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid #ccc; cursor: pointer; background: #f0f0f0; display: inline-block; }
 .dot.filled { background: #003399; border-color: #002277; }
-.actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+.actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; flex-wrap: wrap; }
 .empty { text-align: center; padding: 2rem; color: #aaa; font-size: 14px; }
 .detail-view { display: none; }
 .detail-view.open { display: block; }
@@ -65,46 +65,79 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 .list-view.open { display: block; }
 .back-btn { font-size: 13px; color: #666; background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 4px; }
 .back-btn:hover { color: #1a1a1a; }
-.karte-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
-.karte-avatar { width: 52px; height: 52px; border-radius: 50%; background: #dde5ff; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; color: #003399; flex-shrink: 0; }
+.karte-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.karte-avatar { width: 48px; height: 48px; border-radius: 50%; background: #dde5ff; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; color: #003399; flex-shrink: 0; }
+.karte-header-info { flex: 1; min-width: 0; }
+.karte-header-btns { display: flex; gap: 6px; flex-wrap: wrap; }
 .hint { font-size: 11px; color: #aaa; margin-top: 2px; }
-.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: flex-start; justify-content: center; padding: 24px 12px; overflow-y: auto; }
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: flex-start; justify-content: center; padding: 16px 12px; overflow-y: auto; }
 .modal-bg.open { display: flex; }
-.modal { background: #fff; border-radius: 12px; padding: 20px 24px; width: min(560px, 96vw); border: 1px solid #e8e8e8; }
-.modal h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #1a1a1a; }
-.ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.ba-label { font-size: 12px; font-weight: 600; color: #003399; margin-bottom: 8px; padding: 4px 10px; background: #dde5ff; border-radius: 8px; display: inline-block; }
-.rating-row { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
-.rating-label { font-size: 12px; color: #666; width: 84px; flex-shrink: 0; }
-.dots-wrap { display: flex; gap: 3px; }
-.dot-hint { font-size: 11px; color: #aaa; margin-left: 4px; min-width: 52px; }
-.record-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+.modal { background: #fff; border-radius: 12px; padding: 18px 16px; width: 100%; max-width: 560px; border: 1px solid #e8e8e8; }
+.modal h2 { font-size: 15px; font-weight: 600; margin-bottom: 14px; color: #1a1a1a; }
+.ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ba-label { font-size: 12px; font-weight: 600; color: #003399; margin-bottom: 8px; padding: 4px 8px; background: #dde5ff; border-radius: 8px; display: inline-block; }
+.rating-row { display: flex; align-items: center; gap: 4px; margin-bottom: 7px; flex-wrap: nowrap; }
+.rating-label { font-size: 11px; color: #666; width: 72px; flex-shrink: 0; }
+.dots-wrap { display: flex; gap: 3px; flex-shrink: 0; }
+.dot-hint { font-size: 10px; color: #aaa; margin-left: 2px; min-width: 44px; }
+.record-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
 .record-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
 .record-num { font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 8px; background: #dde5ff; color: #003399; flex-shrink: 0; }
 .record-card-date { font-size: 13px; font-weight: 600; color: #1a1a1a; }
 .ba-display-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
 .ba-col-label { font-size: 11px; font-weight: 600; color: #003399; margin-bottom: 6px; padding: 2px 8px; background: #dde5ff; border-radius: 6px; display: inline-block; }
-.ba-row { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
-.ba-item-label { font-size: 11px; color: #666; width: 80px; flex-shrink: 0; }
-.mini-dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid #ccc; display: inline-block; }
-.records-toolbar { display: flex; align-items: center; justify-content: space-between; }
+.ba-row { display: flex; align-items: center; gap: 4px; margin-bottom: 5px; }
+.ba-item-label { font-size: 10px; color: #666; width: 66px; flex-shrink: 0; }
+.mini-dot { width: 9px; height: 9px; border-radius: 50%; border: 1px solid #ccc; display: inline-block; }
+.records-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 .records-count { font-size: 12px; color: #888; }
 .rec-field { margin-bottom: 10px; }
 .rec-field:last-child { margin-bottom: 0; }
 .rec-field-label { font-size: 12px; font-weight: 600; color: #003399; margin-bottom: 3px; }
 .rec-field-value { font-size: 13px; color: #1a1a1a; line-height: 1.6; }
 .rec-divider { border: none; border-top: 1px solid #f0f0f0; margin: 10px 0; }
-.photo-upload-area { border: 1px dashed #ccc; border-radius: 8px; padding: 12px; text-align: center; cursor: pointer; background: #fafafa; margin-top: 8px; }
+.photo-upload-area { border: 1px dashed #ccc; border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; background: #fafafa; margin-top: 6px; }
 .photo-upload-area input[type=file] { display: none; }
 .photo-upload-label { font-size: 12px; color: #888; cursor: pointer; display: block; }
-.photo-preview-grid { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.photo-preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 6px; }
 .photo-thumb-wrap { position: relative; }
-.photo-thumb { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; border: 1px solid #e8e8e8; display: block; }
-.photo-delete-btn { position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border-radius: 50%; background: rgba(0,0,0,0.5); color: #fff; border: none; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; }
-.photo-display-grid { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
-.photo-display-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; border: 1px solid #e8e8e8; display: block; }
+.photo-thumb { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 6px; border: 1px solid #e8e8e8; display: block; }
+.photo-delete-btn { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0,0,0,0.5); color: #fff; border: none; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+.photo-display-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 6px; }
+.photo-display-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 6px; border: 1px solid #e8e8e8; display: block; }
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #003399; color: #fff; font-size: 13px; padding: 10px 20px; border-radius: 8px; z-index: 200; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
 .toast.show { opacity: 1; }
+
+/* タブレット以上 */
+@media (min-width: 560px) {
+  .header h1 { font-size: 18px; }
+  .field-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+  .karte-header { flex-wrap: nowrap; align-items: center; }
+  .karte-header-btns { flex-wrap: nowrap; }
+  .photo-preview-grid { grid-template-columns: 1fr 1fr; }
+  .photo-display-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* スマホ */
+@media (max-width: 559px) {
+  .field-row { grid-template-columns: 1fr; }
+  .field-row.triple { grid-template-columns: 1fr 1fr; }
+  .ba-grid { grid-template-columns: 1fr; }
+  .ba-display-grid { grid-template-columns: 1fr; }
+  .karte-header-btns { width: 100%; }
+  .karte-header-btns .btn { flex: 1; text-align: center; }
+  .actions { justify-content: stretch; }
+  .actions .btn { flex: 1; text-align: center; }
+  .photo-preview-grid { grid-template-columns: 1fr 1fr 1fr; }
+  .photo-display-grid { grid-template-columns: 1fr 1fr 1fr; }
+  .photo-thumb { aspect-ratio: 2/3; }
+  .photo-display-img { aspect-ratio: 2/3; }
+  .header-btns { gap: 4px; }
+  .btn-export, .btn-import { font-size: 11px; padding: 5px 8px; }
+  .btn.btn-primary { font-size: 11px; padding: 6px 10px; }
+  .form-section { padding: 12px; }
+  .modal { padding: 14px 12px; }
+}
 </style>
 </head>
 <body>
@@ -156,9 +189,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
     </div>
     <div class="form-section">
       <div class="section-title">クライアントの訴えとゴール</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div class="field"><label>クライアントの訴え</label><textarea id="f-complaint" placeholder="腰痛が続いている…" style="min-height:88px;"></textarea></div>
-        <div class="field"><label>目指したいゴール</label><textarea id="f-goal" placeholder="育児中も楽に動けるようになりたい…" style="min-height:88px;"></textarea></div>
+      <div class="field-row">
+        <div class="field"><label>クライアントの訴え</label><textarea id="f-complaint" placeholder="腰痛が続いている…" style="min-height:80px;"></textarea></div>
+        <div class="field"><label>目指したいゴール</label><textarea id="f-goal" placeholder="育児中も楽に動けるようになりたい…" style="min-height:80px;"></textarea></div>
       </div>
     </div>
     <div class="form-section">
@@ -199,11 +232,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
     <button class="back-btn" onclick="switchTab('list')">← 一覧に戻る</button>
     <div class="karte-header">
       <div class="karte-avatar" id="d-avatar">--</div>
-      <div>
-        <div style="font-size:18px;font-weight:600;color:#1a1a1a;" id="d-name">-</div>
-        <div style="font-size:13px;color:#666;" id="d-meta">-</div>
+      <div class="karte-header-info">
+        <div style="font-size:17px;font-weight:600;color:#1a1a1a;" id="d-name">-</div>
+        <div style="font-size:12px;color:#666;" id="d-meta">-</div>
       </div>
-      <div style="margin-left:auto;display:flex;gap:8px;">
+      <div class="karte-header-btns">
         <button class="btn btn-sm" onclick="exportPDF()">PDF出力</button>
         <button class="btn btn-sm btn-primary" onclick="openAddRecord()">+ 施術記録追加</button>
       </div>
@@ -214,7 +247,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
     </div>
     <div class="form-section">
       <div class="section-title">クライアントの訴えとゴール</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="field-row">
         <div><div style="font-size:12px;color:#666;margin-bottom:4px;">クライアントの訴え</div><div id="d-complaint" style="font-size:13px;color:#1a1a1a;background:#fafafa;border-radius:8px;padding:8px 12px;min-height:48px;"></div></div>
         <div><div style="font-size:12px;color:#666;margin-bottom:4px;">目指したいゴール</div><div id="d-goal" style="font-size:13px;color:#1a1a1a;background:#fafafa;border-radius:8px;padding:8px 12px;min-height:48px;"></div></div>
       </div>
@@ -235,9 +268,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 <div class="modal-bg" id="modal-record">
   <div class="modal">
     <h2>施術記録を追加</h2>
-    <div class="field" style="margin-bottom:14px;"><label>施術日</label><input id="r-date" type="date" style="max-width:200px;"></div>
-    <div style="font-size:12px;font-weight:600;color:#666;margin-bottom:10px;">身体所見</div>
-    <div class="ba-grid" style="margin-bottom:14px;">
+    <div class="field" style="margin-bottom:12px;"><label>施術日</label><input id="r-date" type="date" style="max-width:200px;"></div>
+    <div style="font-size:12px;font-weight:600;color:#666;margin-bottom:8px;">身体所見</div>
+    <div class="ba-grid" style="margin-bottom:12px;">
       <div>
         <div class="ba-label">ビフォー（施術前）</div>
         <div id="r-before-ratings"></div>
@@ -255,9 +288,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
         <div class="photo-preview-grid" id="r-after-previews"></div>
       </div>
     </div>
-    <div class="field" style="margin-bottom:10px;"><label>施術内容</label><textarea id="r-content" placeholder="施術したポジションなど" style="min-height:72px;"></textarea></div>
-    <div class="field" style="margin-bottom:10px;"><label>エクササイズ</label><textarea id="r-exercise" placeholder="自宅でのセルフケア・エクササイズ内容…" style="min-height:72px;"></textarea></div>
-    <div class="field" style="margin-bottom:14px;"><label>メモ・特記事項</label><textarea id="r-memo" placeholder="次回への申し送りなど" style="min-height:52px;"></textarea></div>
+    <div class="field" style="margin-bottom:10px;"><label>施術内容</label><textarea id="r-content" placeholder="施術したポジションなど" style="min-height:64px;"></textarea></div>
+    <div class="field" style="margin-bottom:10px;"><label>エクササイズ</label><textarea id="r-exercise" placeholder="自宅でのセルフケア・エクササイズ内容…" style="min-height:64px;"></textarea></div>
+    <div class="field" style="margin-bottom:12px;"><label>メモ・特記事項</label><textarea id="r-memo" placeholder="次回への申し送りなど" style="min-height:48px;"></textarea></div>
     <div class="actions">
       <button class="btn" onclick="closeModal()">キャンセル</button>
       <button class="btn btn-primary" onclick="saveRecord()">追加</button>
@@ -299,17 +332,17 @@ function switchTab(tab){document.getElementById('view-list').className='list-vie
 function openNewClient(){clearForm();switchTab('new');document.getElementById('f-date').value=today();}
 async function saveClient(){const name=document.getElementById('f-name').value.trim();if(!name){alert('氏名を入力してください');return;}const client={id:Date.now(),name,kana:document.getElementById('f-kana').value.trim(),dob:document.getElementById('f-dob').value,phone:document.getElementById('f-phone').value.trim(),address:document.getElementById('f-address').value.trim(),status:document.getElementById('f-status').value,statusDate:document.getElementById('f-status-date').value,statusNote:document.getElementById('f-status-note').value.trim(),complaint:document.getElementById('f-complaint').value.trim(),goal:document.getElementById('f-goal').value.trim(),records:[]};const rec={date:document.getElementById('f-date').value,before:getDots('fb'),beforeNote:document.getElementById('f-before-note').value.trim(),after:getDots('fa'),afterNote:document.getElementById('f-after-note').value.trim(),content:document.getElementById('f-content').value.trim(),exercise:document.getElementById('f-exercise').value.trim(),memo:document.getElementById('f-memo').value.trim()};if(rec.date||rec.content)client.records.push(rec);clients.unshift(client);save();if(photoBuf['f-before']?.length)await dbPut(photoKey(client.id,0,'before'),photoBuf['f-before']);if(photoBuf['f-after']?.length)await dbPut(photoKey(client.id,0,'after'),photoBuf['f-after']);clearForm();switchTab('list');}
 function clearForm(){['f-name','f-kana','f-dob','f-phone','f-address','f-status-note','f-complaint','f-goal','f-before-note','f-after-note','f-content','f-exercise','f-memo','f-status-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('f-status').value='';document.getElementById('f-status-sub').style.display='none';document.getElementById('age-hint').textContent='';document.getElementById('f-date').value=today();clearPhotoBuf('f');}
-function openDetail(i){currentClientId=i;sortNewest=true;updateSortBtn();const c=clients[i];const age=calcAgeFrom(c.dob);document.getElementById('d-avatar').textContent=initials(c.name);document.getElementById('d-name').textContent=c.name+(c.kana?`　${c.kana}`:'');document.getElementById('d-meta').textContent=[age!==null?age+'歳':'',c.dob?c.dob+'生':'',c.phone].filter(Boolean).join('　');const sdl=c.status==='妊娠中'?'出産予定日':c.status==='産後'?'出産日':'';document.getElementById('d-basic').innerHTML=[['氏名',c.name+(c.kana?`（${c.kana}）`:'')],['生年月日',c.dob?`${c.dob}（${age!==null?age+'歳':'－'}）`:'－'],['連絡先',c.phone||'－'],['住所',c.address||'－'],['状態',c.status?`<span class="status-badge status-${c.status}">${c.status}</span>${c.statusNote?'　'+c.statusNote:''}`:'－'],sdl?[sdl,c.statusDate||'－']:null].filter(Boolean).map(([k,v])=>`<div style="color:#666;font-size:12px;">${k}</div><div>${v}</div>`).join('');const noText='<span style="color:#aaa;">未記入</span>';document.getElementById('d-complaint').innerHTML=c.complaint?c.complaint.replace(/\n/g,'<br>'):noText;document.getElementById('d-goal').innerHTML=c.goal?c.goal.replace(/\n/g,'<br>'):noText;renderRecords(c);switchTab('detail');document.getElementById('view-detail').className='detail-view open';}
+function openDetail(i){currentClientId=i;sortNewest=true;updateSortBtn();const c=clients[i];const age=calcAgeFrom(c.dob);document.getElementById('d-avatar').textContent=initials(c.name);document.getElementById('d-name').textContent=c.name+(c.kana?`　${c.kana}`:'');document.getElementById('d-meta').textContent=[age!==null?age+'歳':'',c.dob?c.dob+'生':'',c.phone].filter(Boolean).join('　');const sdl=c.status==='妊娠中'?'出産予定日':c.status==='産後'?'出産日':'';document.getElementById('d-basic').innerHTML=[['氏名',c.name+(c.kana?`（${c.kana}）`:'')],['生年月日',c.dob?`${c.dob}（${age!==null?age+'歳':'－'}）`:'－'],['連絡先',c.phone||'－'],['住所',c.address||'－'],['状態',c.status?`<span class="status-badge status-${c.status}">${c.status}</span>${c.statusNote?'　'+c.statusNote:''}`:'－'],sdl?[sdl,c.statusDate||'－']:null].filter(Boolean).map(([k,v])=>`<div style="color:#666;font-size:12px;">${k}</div><div style="font-size:13px;">${v}</div>`).join('');const noText='<span style="color:#aaa;">未記入</span>';document.getElementById('d-complaint').innerHTML=c.complaint?c.complaint.replace(/\n/g,'<br>'):noText;document.getElementById('d-goal').innerHTML=c.goal?c.goal.replace(/\n/g,'<br>'):noText;renderRecords(c);switchTab('detail');document.getElementById('view-detail').className='detail-view open';}
 function toggleSort(){sortNewest=!sortNewest;updateSortBtn();renderRecords(clients[currentClientId]);}
 function updateSortBtn(){document.getElementById('sort-icon').textContent=sortNewest?'↓':'↑';document.getElementById('sort-label').textContent=sortNewest?'新しい順':'古い順';}
-function dotsHTML(vals){return BODY_ITEMS.map((item,i)=>{const val=vals?(vals[i]||0):0;const dots=[1,2,3,4,5].map(n=>`<div class="mini-dot" style="background:${n<=val?'#003399':'#eee'};"></div>`).join('');return`<div class="ba-row"><span class="ba-item-label">${item}</span><div style="display:flex;gap:3px;">${dots}</div><span style="font-size:10px;color:#aaa;margin-left:4px;">${DOT_LABELS[val]||'－'}</span></div>`;}).join('');}
+function dotsHTML(vals){return BODY_ITEMS.map((item,i)=>{const val=vals?(vals[i]||0):0;const dots=[1,2,3,4,5].map(n=>`<div class="mini-dot" style="background:${n<=val?'#003399':'#eee'};"></div>`).join('');return`<div class="ba-row"><span class="ba-item-label">${item}</span><div style="display:flex;gap:3px;">${dots}</div><span style="font-size:10px;color:#aaa;margin-left:3px;">${DOT_LABELS[val]||'－'}</span></div>`;}).join('');}
 function recField(label,value){if(!value)return'';return`<div class="rec-field"><div class="rec-field-label">${label}</div><div class="rec-field-value">${value.replace(/\n/g,'<br>')}</div></div>`;}
 async function renderRecords(c){const total=c.records?c.records.length:0;document.getElementById('d-records-count').textContent=`全${total}回`;const el=document.getElementById('d-records');if(!total){el.innerHTML='<div class="empty">施術記録がありません</div>';return;}const indexed=(c.records||[]).map((r,i)=>({...r,origIdx:i+1,dbIdx:i}));const sorted=sortNewest?[...indexed].reverse():indexed;const withPhotos=await Promise.all(sorted.map(async r=>{const bPhotos=await dbGet(photoKey(c.id,r.dbIdx,'before'));const aPhotos=await dbGet(photoKey(c.id,r.dbIdx,'after'));return{...r,bPhotos,aPhotos};}));el.innerHTML=withPhotos.map(r=>{const bPhotoHTML=r.bPhotos.length?`<div class="photo-display-grid">${r.bPhotos.map(u=>`<img src="${u}" class="photo-display-img">`).join('')}</div>`:'';const aPhotoHTML=r.aPhotos.length?`<div class="photo-display-grid">${r.aPhotos.map(u=>`<img src="${u}" class="photo-display-img">`).join('')}</div>`:'';return`<div class="record-card"><div class="record-card-header"><span class="record-num">第${r.origIdx}回</span><span class="record-card-date">${r.date||'日付不明'}</span></div><div class="ba-display-grid"><div><div class="ba-col-label">ビフォー（施術前）</div>${dotsHTML(r.before)}${r.beforeNote?`<div class="rec-field" style="margin-top:6px;"><div class="rec-field-label">所見メモ（前）</div><div class="rec-field-value">${r.beforeNote.replace(/\n/g,'<br>')}</div></div>`:''}${bPhotoHTML}</div><div><div class="ba-col-label">アフター（施術後）</div>${dotsHTML(r.after)}${r.afterNote?`<div class="rec-field" style="margin-top:6px;"><div class="rec-field-label">所見メモ（後）</div><div class="rec-field-value">${r.afterNote.replace(/\n/g,'<br>')}</div></div>`:''}${aPhotoHTML}</div></div>${r.content||r.exercise||r.memo?`<hr class="rec-divider">`:''}${recField('施術内容',r.content)}${recField('エクササイズ',r.exercise)}${recField('メモ・特記事項',r.memo)}</div>`;}).join('');}
 function openAddRecord(){buildRatings('r-before-ratings','rb');buildRatings('r-after-ratings','ra');document.getElementById('r-date').value=today();['r-before-note','r-after-note','r-content','r-exercise','r-memo'].forEach(id=>document.getElementById(id).value='');clearPhotoBuf('r');document.getElementById('modal-record').className='modal-bg open';}
 function closeModal(){document.getElementById('modal-record').className='modal-bg';}
 async function saveRecord(){const c=clients[currentClientId];if(!c.records)c.records=[];const recIdx=c.records.length;c.records.push({date:document.getElementById('r-date').value,before:getDots('rb'),beforeNote:document.getElementById('r-before-note').value.trim(),after:getDots('ra'),afterNote:document.getElementById('r-after-note').value.trim(),content:document.getElementById('r-content').value.trim(),exercise:document.getElementById('r-exercise').value.trim(),memo:document.getElementById('r-memo').value.trim()});save();if(photoBuf['r-before']?.length)await dbPut(photoKey(c.id,recIdx,'before'),photoBuf['r-before']);if(photoBuf['r-after']?.length)await dbPut(photoKey(c.id,recIdx,'after'),photoBuf['r-after']);await renderRecords(c);closeModal();}
 async function exportPDF(){const c=clients[currentClientId];const age=calcAgeFrom(c.dob);const sdl=c.status==='妊娠中'?'出産予定日':c.status==='産後'?'出産日':'';const recsWithPhotos=await Promise.all((c.records||[]).map(async(r,i)=>{const bPhotos=await dbGet(photoKey(c.id,i,'before'));const aPhotos=await dbGet(photoKey(c.id,i,'after'));return{...r,bPhotos,aPhotos,idx:i};}));const win=window.open('','_blank');if(!win){alert('ポップアップを許可してください');return;}function pdfDots(vals){return BODY_ITEMS.map((item,i)=>{const val=vals?(vals[i]||0):0;const dots=[1,2,3,4,5].map(n=>`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${n<=val?'#003399':'#ddd'};margin-right:2px;"></span>`).join('');return`<tr><td style="font-size:12px;color:#666;padding:3px 8px 3px 0;width:90px;">${item}</td><td style="padding:3px 0;">${dots}<span style="font-size:11px;color:#888;margin-left:4px;">${DOT_LABELS[val]||'－'}</span></td></tr>`;}).join('');}
-const recHTML=recsWithPhotos.map(r=>{const bPhotoHTML=r.bPhotos.length?`<div style="display:flex;flex-direction:column;gap:4px;margin-top:6px;">${r.bPhotos.map(u=>`<img src="${u}" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:4px;border:1px solid #eee;">`).join('')}</div>`:'';const aPhotoHTML=r.aPhotos.length?`<div style="display:flex;flex-direction:column;gap:4px;margin-top:6px;">${r.aPhotos.map(u=>`<img src="${u}" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:4px;border:1px solid #eee;">`).join('')}</div>`:'';return`<div style="border:1px solid #e5e5e5;border-radius:6px;padding:14px;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="font-size:11px;font-weight:600;padding:2px 9px;border-radius:4px;background:#dde5ff;color:#003399;">第${r.idx+1}回</span><span style="font-size:13px;font-weight:600;color:#222;">施術日：${r.date||'不明'}</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;"><div><div style="font-size:11px;font-weight:600;color:#003399;background:#dde5ff;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;">ビフォー（施術前）</div><table>${pdfDots(r.before)}</table>${r.beforeNote?`<div style="margin-top:6px;"><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">所見メモ（前）</div><div style="font-size:12px;color:#333;">${r.beforeNote}</div></div>`:''}${bPhotoHTML}</div><div><div style="font-size:11px;font-weight:600;color:#003399;background:#dde5ff;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;">アフター（施術後）</div><table>${pdfDots(r.after)}</table>${r.afterNote?`<div style="margin-top:6px;"><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">所見メモ（後）</div><div style="font-size:12px;color:#333;">${r.afterNote}</div></div>`:''}${aPhotoHTML}</div></div>${r.content||r.exercise||r.memo?`<div style="border-top:1px solid #eee;margin:10px 0;"></div>`:''}${r.content?`<div style="margin-bottom:8px;"><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">施術内容</div><div style="font-size:13px;color:#222;">${r.content}</div></div>`:''}${r.exercise?`<div style="margin-bottom:8px;"><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">エクササイズ</div><div style="font-size:13px;color:#222;">${r.exercise}</div></div>`:''}${r.memo?`<div><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">メモ・特記事項</div><div style="font-size:12px;color:#555;">${r.memo}</div></div>`:''}</div>`;}).join('');
+const recHTML=recsWithPhotos.map(r=>{const bPhotoHTML=r.bPhotos.length?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;">${r.bPhotos.map(u=>`<img src="${u}" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:4px;border:1px solid #eee;">`).join('')}</div>`:'';const aPhotoHTML=r.aPhotos.length?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;">${r.aPhotos.map(u=>`<img src="${u}" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:4px;border:1px solid #eee;">`).join('')}</div>`:'';return`<div style="border:1px solid #e5e5e5;border-radius:6px;padding:14px;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="font-size:11px;font-weight:600;padding:2px 9px;border-radius:4px;background:#dde5ff;color:#003399;">第${r.idx+1}回</span><span style="font-size:13px;font-weight:600;color:#222;">施術日：${r.date||'不明'}</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;"><div><div style="font-size:11px;font-weight:600;color:#003399;background:#dde5ff;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;">ビフォー（施術前）</div><table>${pdfDots(r.before)}</table>${r.beforeNote?`<div style="margin-top:6px;"><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">所見メモ（前）</div><div style="font-size:12px;color:#333;">${r.beforeNote}</div></div>`:''}${bPhotoHTML}</div><div><div style="font-size:11px;font-weight:600;color:#003399;background:#dde5ff;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;">アフター（施術後）</div><table>${pdfDots(r.after)}</table>${r.afterNote?`<div style="margin-top:6px;"><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">所見メモ（後）</div><div style="font-size:12px;color:#333;">${r.afterNote}</div></div>`:''}${aPhotoHTML}</div></div>${r.content||r.exercise||r.memo?`<div style="border-top:1px solid #eee;margin:10px 0;"></div>`:''}${r.content?`<div style="margin-bottom:8px;"><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">施術内容</div><div style="font-size:13px;color:#222;">${r.content}</div></div>`:''}${r.exercise?`<div style="margin-bottom:8px;"><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">エクササイズ</div><div style="font-size:13px;color:#222;">${r.exercise}</div></div>`:''}${r.memo?`<div><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">メモ・特記事項</div><div style="font-size:12px;color:#555;">${r.memo}</div></div>`:''}</div>`;}).join('');
 win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${c.name}　カルテ</title><style>body{font-family:sans-serif;padding:28px;color:#222;max-width:720px;margin:0 auto;}h1{font-size:19px;font-weight:600;border-bottom:1px solid #ddd;padding-bottom:8px;margin-bottom:14px;}h2{font-size:13px;font-weight:600;color:#555;margin:18px 0 8px;border-left:3px solid #003399;padding-left:8px;}table{border-collapse:collapse;}img{max-width:100%;}@media print{body{padding:16px;}}</style></head><body><h1>${c.name}　カルテ</h1><h2>基本情報</h2><table style="width:100%;"><tr><td style="color:#666;width:80px;padding:4px 0;">氏名</td><td style="padding:4px 12px 4px 0;">${c.name}${c.kana?'（'+c.kana+'）':''}</td><td style="color:#666;width:70px;padding:4px 0;">生年月日</td><td>${c.dob||'－'}${age!==null?'（'+age+'歳）':''}</td></tr><tr><td style="color:#666;padding:4px 0;">連絡先</td><td style="padding:4px 12px 4px 0;">${c.phone||'－'}</td><td style="color:#666;padding:4px 0;">住所</td><td>${c.address||'－'}</td></tr><tr><td style="color:#666;padding:4px 0;">状態</td><td colspan="3">${c.status||'－'}${c.statusNote?' （'+c.statusNote+'）':''}${sdl?' / '+sdl+'：'+(c.statusDate||'－'):''}</td></tr></table><h2>クライアントの訴えとゴール</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div><div style="font-size:11px;color:#888;margin-bottom:4px;">クライアントの訴え</div><div style="background:#f7f7f7;padding:8px 10px;border-radius:4px;font-size:13px;">${c.complaint||'－'}</div></div><div><div style="font-size:11px;color:#888;margin-bottom:4px;">目指したいゴール</div><div style="background:#f7f7f7;padding:8px 10px;border-radius:4px;font-size:13px;">${c.goal||'－'}</div></div></div><h2>施術記録（全${(c.records||[]).length}回）</h2>${recHTML}<script>window.print();<\/script></body></html>`);
 win.document.close();}
 
