@@ -99,11 +99,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 .photo-upload-area { border: 1px dashed #ccc; border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; background: #fafafa; margin-top: 6px; }
 .photo-upload-area input[type=file] { display: none; }
 .photo-upload-label { font-size: 12px; color: #888; cursor: pointer; display: block; }
-.photo-preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 6px; }
+.photo-preview-grid { display: flex; flex-direction: column; gap: 5px; margin-top: 6px; }
 .photo-thumb-wrap { position: relative; }
 .photo-thumb { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 6px; border: 1px solid #e8e8e8; display: block; }
 .photo-delete-btn { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0,0,0,0.5); color: #fff; border: none; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; }
-.photo-display-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 6px; }
+.photo-display-grid { display: flex; flex-direction: column; gap: 5px; margin-top: 6px; }
 .photo-display-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 6px; border: 1px solid #e8e8e8; display: block; }
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #003399; color: #fff; font-size: 13px; padding: 10px 20px; border-radius: 8px; z-index: 200; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
 .toast.show { opacity: 1; }
@@ -114,8 +114,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
   .field-row.triple { grid-template-columns: 1fr 1fr 1fr; }
   .karte-header { flex-wrap: nowrap; align-items: center; }
   .karte-header-btns { flex-wrap: nowrap; }
-  .photo-preview-grid { grid-template-columns: 1fr 1fr; }
-  .photo-display-grid { grid-template-columns: 1fr 1fr; }
+  
+  
 }
 
 /* スマホ */
@@ -128,8 +128,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
   .karte-header-btns .btn { flex: 1; text-align: center; }
   .actions { justify-content: stretch; }
   .actions .btn { flex: 1; text-align: center; }
-  .photo-preview-grid { grid-template-columns: 1fr 1fr 1fr; }
-  .photo-display-grid { grid-template-columns: 1fr 1fr 1fr; }
+  
+  
   .photo-thumb { aspect-ratio: 2/3; }
   .photo-display-img { aspect-ratio: 2/3; }
   .header-btns { gap: 4px; }
