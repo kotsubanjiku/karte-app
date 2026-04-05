@@ -107,6 +107,39 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 .photo-display-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 6px; border: 1px solid #e8e8e8; display: block; }
 .btn-edit { margin-left:auto; font-size:11px; padding:3px 10px; border:1px solid #003399; border-radius:6px; cursor:pointer; background:transparent; color:#003399; flex-shrink:0; }
 .btn-edit:hover { background:#dde5ff; }
+
+
+.client-card-wrap { position: relative; border-radius: 12px; display: flex; align-items: center; gap: 10px; }
+.client-card-wrap.select-mode { cursor: default; }
+.client-card-check { display: none; width: 20px; height: 20px; flex-shrink: 0; accent-color: #e53935; cursor: pointer; }
+.select-mode .client-card-check { display: block; }
+.client-card { flex: 1; transition: opacity 0.15s; }
+.client-card.selected { border-color: #e53935; background: #fff5f5; }
+.btn-delete-mode { font-size: 12px; padding: 5px 12px; border: 1px solid #e53935; border-radius: 8px; cursor: pointer; background: transparent; color: #e53935; white-space: nowrap; }
+.btn-delete-mode:hover { background: #fdecea; }
+.btn-delete-mode.active { background: #e53935; color: #fff; }
+.delete-toolbar { display: none; align-items: center; justify-content: space-between; padding: 10px 14px; background: #fff5f5; border: 1px solid #ffd0d0; border-radius: 10px; margin-bottom: 10px; }
+.delete-toolbar.show { display: flex; }
+.delete-toolbar-count { font-size: 13px; color: #e53935; font-weight: 600; }
+.btn-delete-exec { font-size: 13px; padding: 6px 16px; background: #e53935; color: #fff; border: none; border-radius: 8px; cursor: pointer; }
+.btn-delete-exec:disabled { opacity: 0.4; cursor: default; }
+.btn-delete-cancel { font-size: 13px; padding: 6px 12px; background: transparent; color: #666; border: 1px solid #ccc; border-radius: 8px; cursor: pointer; }
+.toggle-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 0; }
+.toggle-label { font-size: 13px; color: #1a1a1a; }
+.toggle { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; cursor: pointer; inset: 0; background: #ccc; border-radius: 24px; transition: 0.2s; }
+.toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: 0.2s; }
+input:checked + .toggle-slider { background: #003399; }
+input:checked + .toggle-slider:before { transform: translateX(20px); }
+.consent-box { margin-top: 12px; background: #f7f8ff; border: 1px solid #dde5ff; border-radius: 8px; padding: 14px 16px; }
+.consent-title { font-size: 13px; font-weight: 600; color: #003399; margin-bottom: 10px; }
+.consent-section { margin-bottom: 10px; }
+.consent-section-label { font-size: 12px; font-weight: 600; color: #444; margin-bottom: 6px; }
+.consent-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; cursor: pointer; }
+.consent-item input[type=checkbox] { margin-top: 2px; flex-shrink: 0; width: 16px; height: 16px; accent-color: #003399; cursor: pointer; }
+.consent-item span { font-size: 12px; color: #333; line-height: 1.5; }
+.consent-date { font-size: 12px; color: #003399; font-weight: 600; margin-top: 10px; padding-top: 8px; border-top: 1px solid #dde5ff; }
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #003399; color: #fff; font-size: 13px; padding: 10px 20px; border-radius: 8px; z-index: 200; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
 .toast.show { opacity: 1; }
 
@@ -147,10 +180,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
   <div class="header">
     <h1>骨盤軸整体 カルテ管理</h1>
     <div class="header-btns">
+      <button class="btn btn-primary" onclick="openNewClient()">+ 新規</button>
       <button class="btn-import" onclick="document.getElementById('import-input').click()">読み込み</button>
       <input type="file" id="import-input" accept=".json" style="display:none" onchange="importData(event)">
       <button class="btn-export" onclick="exportData()">書き出し</button>
-      <button class="btn btn-primary" onclick="openNewClient()">+ 新規</button>
+      <button class="btn-delete-mode" id="btn-delete-mode" onclick="toggleDeleteMode()">削除</button>
     </div>
   </div>
   <div class="tab-bar">
@@ -159,6 +193,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
   </div>
 
   <div id="view-list" class="list-view open">
+    <div class="delete-toolbar" id="delete-toolbar">
+      <span class="delete-toolbar-count" id="delete-count">0件選択中</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-delete-cancel" onclick="toggleDeleteMode()">キャンセル</button>
+        <button class="btn-delete-exec" id="btn-delete-exec" onclick="execDelete()" disabled>削除する</button>
+      </div>
+    </div>
     <div class="client-list" id="client-list"></div>
   </div>
 
@@ -188,9 +229,36 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
         </div>
         <div class="field"><label>備考</label><input id="f-status-note" type="text" placeholder="例：妊娠28週、第2子など"></div>
       </div>
+      <div style="margin-top:12px;">
+        <div class="toggle-wrap">
+          <label class="toggle"><input type="checkbox" id="f-consent-toggle" onchange="toggleConsentForm('f')"><span class="toggle-slider"></span></label>
+          <span class="toggle-label">同意書の確認を行う</span>
+        </div>
+        <div class="consent-box" id="f-consent-box" style="display:none;">
+          <div class="consent-title">骨盤軸整体 施術同意書</div>
+          <div class="consent-section">
+            <div class="consent-section-label">【施術に関して】</div>
+            <label class="consent-item"><input type="checkbox" class="f-consent-check"><span>「骨盤軸整体」は、医療行為や傷病の治療などを目的としたものではありません。</span></label>
+            <label class="consent-item"><input type="checkbox" class="f-consent-check"><span>整体施術は身体の調整・健康維持増進を目的とするものであり、疾病の診断や治療行為にはあたりません。</span></label>
+            <label class="consent-item"><input type="checkbox" class="f-consent-check"><span>施術の結果には個人差があり、必ずしも効果をお約束できるものではありません。</span></label>
+          </div>
+          <div class="consent-section">
+            <div class="consent-section-label">【リスク・免責事項について】</div>
+            <label class="consent-item"><input type="checkbox" class="f-consent-check"><span>施術中や施術後に、一時的な痛み・違和感・疲労感など身体の変化が生じる場合があります。</span></label>
+            <label class="consent-item"><input type="checkbox" class="f-consent-check"><span>施術後の体調変化や疾病の悪化等に関して、施術者はその責任を負いかねます。</span></label>
+          </div>
+          <div class="consent-section">
+            <div class="consent-section-label">【利用者の自己管理について】</div>
+            <label class="consent-item"><input type="checkbox" class="f-consent-check"><span>現在治療中の病気や既往歴、妊娠・出産に関する経過などについては、必ず事前に申告します。</span></label>
+            <label class="consent-item"><input type="checkbox" class="f-consent-check"><span>医師の治療を受けている方は、主治医の許可を得た上で施術を受けることが望ましいことを理解しています。</span></label>
+            <label class="consent-item"><input type="checkbox" class="f-consent-check"><span>自身の体調管理については自己責任とし、異常を感じた場合は速やかに医療機関を受診します。</span></label>
+          </div>
+          <div id="f-consent-status" style="font-size:12px;color:#888;margin-top:8px;">全項目にチェックを入れると同意日時が記録されます</div>
+        </div>
+      </div>
     </div>
     <div class="form-section">
-      <div class="section-title">クライアントの訴えとゴール</div>
+      <div class="section-title" style="display:flex;align-items:center;justify-content:space-between;">クライアントの訴えとゴール<button class="btn-edit" onclick="openEditGoal()">編集</button></div>
       <div class="field-row">
         <div class="field"><label>クライアントの訴え</label><textarea id="f-complaint" placeholder="腰痛が続いている…" style="min-height:80px;"></textarea></div>
         <div class="field"><label>目指したいゴール</label><textarea id="f-goal" placeholder="育児中も楽に動けるようになりたい…" style="min-height:80px;"></textarea></div>
@@ -245,11 +313,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
       </div>
     </div>
     <div class="form-section">
-      <div class="section-title">基本情報</div>
+      <div class="section-title" style="display:flex;align-items:center;justify-content:space-between;">基本情報<button class="btn-edit" onclick="openEditBasic()">編集</button></div>
       <div id="d-basic" style="font-size:14px;color:#1a1a1a;display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;"></div>
+      <div id="d-consent-display" style="margin-top:10px;"></div>
     </div>
     <div class="form-section">
-      <div class="section-title">クライアントの訴えとゴール</div>
+      <div class="section-title" style="display:flex;align-items:center;justify-content:space-between;">クライアントの訴えとゴール<button class="btn-edit" onclick="openEditGoal()">編集</button></div>
       <div class="field-row">
         <div><div style="font-size:12px;color:#666;margin-bottom:4px;">クライアントの訴え</div><div id="d-complaint" style="font-size:13px;color:#1a1a1a;background:#fafafa;border-radius:8px;padding:8px 12px;min-height:48px;"></div></div>
         <div><div style="font-size:12px;color:#666;margin-bottom:4px;">目指したいゴール</div><div id="d-goal" style="font-size:13px;color:#1a1a1a;background:#fafafa;border-radius:8px;padding:8px 12px;min-height:48px;"></div></div>
@@ -264,6 +333,55 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
         </div>
       </div>
       <div style="margin-top:12px;" id="d-records"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-bg" id="modal-edit-basic">
+  <div class="modal">
+    <h2>基本情報を編集</h2>
+    <div class="field-row">
+      <div class="field"><label>氏名</label><input id="eb-name" type="text"></div>
+      <div class="field"><label>ふりがな</label><input id="eb-kana" type="text"></div>
+    </div>
+    <div class="field-row triple">
+      <div class="field"><label>生年月日</label><input id="eb-dob" type="date"><span class="hint" id="eb-age-hint"></span></div>
+      <div class="field"><label>連絡先</label><input id="eb-phone" type="tel"></div>
+      <div class="field"><label>住所</label><input id="eb-address" type="text"></div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>状態</label>
+        <select id="eb-status" onchange="toggleEbStatus()">
+          <option value="">選択してください</option>
+          <option value="妊娠中">妊娠中</option>
+          <option value="産後">産後</option>
+          <option value="その他">その他</option>
+        </select>
+        <div id="eb-status-sub" style="display:none;"><div class="sub-field"><label id="eb-status-label">出産予定日</label><input type="date" id="eb-status-date"></div></div>
+      </div>
+      <div class="field"><label>備考</label><input id="eb-status-note" type="text"></div>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="closeEditBasic()">キャンセル</button>
+      <button class="btn btn-primary" onclick="saveEditBasic()">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal-edit-goal">
+  <div class="modal">
+    <h2>訴えとゴールを編集</h2>
+    <div class="field-row single">
+      <div class="field"><label>クライアントの訴え</label><textarea id="eg-complaint" style="min-height:100px;"></textarea></div>
+    </div>
+    <div class="field-row single">
+      <div class="field"><label>目指したいゴール</label><textarea id="eg-goal" style="min-height:100px;"></textarea></div>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="closeEditGoal()">キャンセル</button>
+      <button class="btn btn-primary" onclick="saveEditGoal()">保存</button>
     </div>
   </div>
 </div>
@@ -331,12 +449,61 @@ function deletePreviewPhoto(prefix,side,idx){const key=`${prefix}-${side}`;photo
 function clearPhotoBuf(prefix){['before','after'].forEach(side=>{photoBuf[`${prefix}-${side}`]=[];const c=document.getElementById(`${prefix}-${side}-previews`);if(c)c.innerHTML='';});}
 async function exportData(){showToast('書き出し準備中…');const keys=await dbGetAllKeys();const photos={};for(const k of keys){photos[k]=await dbGet(k);}const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),clients,photos})],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`karte_backup_${today().replace(/-/g,'')}.json`;a.click();URL.revokeObjectURL(url);showToast('書き出し完了！');}
 async function importData(event){const file=event.target.files[0];if(!file)return;event.target.value='';const text=await file.text();let data;try{data=JSON.parse(text);}catch(e){alert('ファイルの読み込みに失敗しました。');return;}if(!data.clients||!Array.isArray(data.clients)){alert('バックアップファイルの形式が正しくありません。');return;}const existingIds=new Set(clients.map(c=>c.id));let added=0,updated=0;for(const inc of data.clients){if(existingIds.has(inc.id)){const idx=clients.findIndex(c=>c.id===inc.id);const existing=new Set((clients[idx].records||[]).map(r=>r.date+'_'+r.content));const newRecs=(inc.records||[]).filter(r=>!existing.has(r.date+'_'+r.content));if(newRecs.length){clients[idx].records=[...(clients[idx].records||[]),...newRecs];updated++;}}else{clients.unshift(inc);added++;}}save();if(data.photos){const existingKeys=new Set(await dbGetAllKeys());for(const[k,v]of Object.entries(data.photos)){if(!existingKeys.has(k)&&v?.length)await dbPut(k,v);}}renderList();showToast(`読み込み完了！新規${added}件追加・${updated}件更新`);}
-function renderList(){const el=document.getElementById('client-list');if(!clients.length){el.innerHTML='<div class="empty">クライアントがいません<br><span style="font-size:12px;">「新規クライアント」から登録してください</span></div>';return;}el.innerHTML=clients.map((c,i)=>{const age=calcAgeFrom(c.dob);return`<div class="client-card" onclick="openDetail(${i})"><div class="avatar">${initials(c.name)}</div><div class="client-info"><div class="client-name">${c.name}　<span style="font-size:12px;color:#888;font-weight:400;">${c.kana||''}</span></div><div class="client-meta">${age!==null?age+'歳':''}${c.dob?'（'+c.dob+'生）':''}　施術${c.records?c.records.length:0}回</div></div>${c.status?`<span class="status-badge status-${c.status}">${c.status}</span>`:''}</div>`;}).join('');}
+function renderList(){const el=document.getElementById('client-list');if(!clients.length){el.innerHTML='<div class="empty">クライアントがいません<br><span style="font-size:12px;">「新規クライアント」から登録してください</span></div>';return;}el.innerHTML=clients.map((c,i)=>{const age=calcAgeFrom(c.dob);return`<div class="client-card-wrap${deleteMode?' select-mode':''}" id="wrap-${i}"><input type="checkbox" class="client-card-check" id="check-${i}" onchange="updateDeleteCount()"><div class="client-card${deleteMode&&document.getElementById('check-'+i)?.checked?' selected':''}" id="card-${i}" onclick="handleCardClick(event,${i})"><div class="avatar">${initials(c.name)}</div><div class="client-info"><div class="client-name">${c.name}　<span style="font-size:12px;color:#888;font-weight:400;">${c.kana||''}</span></div><div class="client-meta">${age!==null?age+'歳':''}${c.dob?'（'+c.dob+'生）':''}　施術${c.records?c.records.length:0}回</div></div>${c.status?`<span class="status-badge status-${c.status}">${c.status}</span>`:''}</div></div>`;}).join('');}
+
+// 削除モード
+let deleteMode=false;
+function toggleDeleteMode(){
+  deleteMode=!deleteMode;
+  const btn=document.getElementById('btn-delete-mode');
+  const toolbar=document.getElementById('delete-toolbar');
+  btn.textContent=deleteMode?'キャンセル':'削除';
+  btn.classList.toggle('active',deleteMode);
+  toolbar.classList.toggle('show',deleteMode);
+  renderList();
+  updateDeleteCount();
+}
+function handleCardClick(e,i){
+  if(deleteMode){
+    const cb=document.getElementById(`check-${i}`);
+    if(cb&&e.target!==cb){cb.checked=!cb.checked;updateDeleteCount();}
+    return;
+  }
+  openDetail(i);
+}
+function updateDeleteCount(){
+  const checked=document.querySelectorAll('.client-card-check:checked').length;
+  document.getElementById('delete-count').textContent=`${checked}件選択中`;
+  document.getElementById('btn-delete-exec').disabled=checked===0;
+}
+async function execDelete(){
+  const checked=[...document.querySelectorAll('.client-card-check:checked')];
+  if(!checked.length)return;
+  const names=checked.map(cb=>{const i=parseInt(cb.id.replace('check-',''));return clients[i]?.name||'';}).filter(Boolean);
+  if(!confirm(`以下のクライアントを削除しますか？\n${names.join('、')}\n\nこの操作は元に戻せません。`))return;
+  const indices=checked.map(cb=>parseInt(cb.id.replace('check-',''))).sort((a,b)=>b-a);
+  for(const i of indices){
+    const c=clients[i];
+    const keys=await dbGetAllKeys();
+    const targetKeys=keys.filter(k=>k.startsWith(`c${c.id}_`));
+    for(const k of targetKeys){
+      await new Promise(r=>{const tx=db.transaction('photos','readwrite');tx.objectStore('photos').delete(k);tx.oncomplete=r;});
+    }
+    clients.splice(i,1);
+  }
+  save();
+  deleteMode=false;
+  document.getElementById('btn-delete-mode').textContent='削除';
+  document.getElementById('btn-delete-mode').classList.remove('active');
+  document.getElementById('delete-toolbar').classList.remove('show');
+  renderList();
+  showToast(`${indices.length}件削除しました`);
+}
 function switchTab(tab){document.getElementById('view-list').className='list-view'+(tab==='list'?' open':'');['new','detail'].forEach(t=>document.getElementById('view-'+t).className='detail-view'+(t===tab?' open':''));document.getElementById('tab-list').className='tab'+(tab==='list'?' active':'');document.getElementById('tab-new').className='tab'+(tab==='new'?' active':'');if(tab==='list')renderList();if(tab==='new'){buildRatings('f-before-ratings','fb');buildRatings('f-after-ratings','fa');toggleStatusField('f');}}
 function openNewClient(){clearForm();switchTab('new');document.getElementById('f-date').value=today();}
-async function saveClient(){const name=document.getElementById('f-name').value.trim();if(!name){alert('氏名を入力してください');return;}const client={id:Date.now(),name,kana:document.getElementById('f-kana').value.trim(),dob:document.getElementById('f-dob').value,phone:document.getElementById('f-phone').value.trim(),address:document.getElementById('f-address').value.trim(),status:document.getElementById('f-status').value,statusDate:document.getElementById('f-status-date').value,statusNote:document.getElementById('f-status-note').value.trim(),complaint:document.getElementById('f-complaint').value.trim(),goal:document.getElementById('f-goal').value.trim(),records:[]};const rec={date:document.getElementById('f-date').value,before:getDots('fb'),beforeNote:document.getElementById('f-before-note').value.trim(),after:getDots('fa'),afterNote:document.getElementById('f-after-note').value.trim(),content:document.getElementById('f-content').value.trim(),exercise:document.getElementById('f-exercise').value.trim(),nextdate:document.getElementById('f-nextdate').value,memo:document.getElementById('f-memo').value.trim()};if(rec.date||rec.content)client.records.push(rec);clients.unshift(client);save();if(photoBuf['f-before']?.length)await dbPut(photoKey(client.id,0,'before'),photoBuf['f-before']);if(photoBuf['f-after']?.length)await dbPut(photoKey(client.id,0,'after'),photoBuf['f-after']);clearForm();switchTab('list');}
-function clearForm(){['f-name','f-kana','f-dob','f-phone','f-address','f-status-note','f-complaint','f-goal','f-before-note','f-after-note','f-content','f-exercise','f-memo','f-status-date','f-nextdate'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('f-status').value='';document.getElementById('f-status-sub').style.display='none';document.getElementById('age-hint').textContent='';document.getElementById('f-date').value=today();clearPhotoBuf('f');}
-function openDetail(i){currentClientId=i;sortNewest=true;updateSortBtn();const c=clients[i];const age=calcAgeFrom(c.dob);document.getElementById('d-avatar').textContent=initials(c.name);document.getElementById('d-name').textContent=c.name+(c.kana?`　${c.kana}`:'');document.getElementById('d-meta').textContent=[age!==null?age+'歳':'',c.dob?c.dob+'生':'',c.phone].filter(Boolean).join('　');const sdl=c.status==='妊娠中'?'出産予定日':c.status==='産後'?'出産日':'';document.getElementById('d-basic').innerHTML=[['氏名',c.name+(c.kana?`（${c.kana}）`:'')],['生年月日',c.dob?`${c.dob}（${age!==null?age+'歳':'－'}）`:'－'],['連絡先',c.phone||'－'],['住所',c.address||'－'],['状態',c.status?`<span class="status-badge status-${c.status}">${c.status}</span>${c.statusNote?'　'+c.statusNote:''}`:'－'],sdl?[sdl,c.statusDate||'－']:null].filter(Boolean).map(([k,v])=>`<div style="color:#666;font-size:12px;">${k}</div><div style="font-size:13px;">${v}</div>`).join('');const noText='<span style="color:#aaa;">未記入</span>';document.getElementById('d-complaint').innerHTML=c.complaint?c.complaint.replace(/\n/g,'<br>'):noText;document.getElementById('d-goal').innerHTML=c.goal?c.goal.replace(/\n/g,'<br>'):noText;renderRecords(c);switchTab('detail');document.getElementById('view-detail').className='detail-view open';}
+async function saveClient(){const name=document.getElementById('f-name').value.trim();if(!name){alert('氏名を入力してください');return;}const client={id:Date.now(),name,kana:document.getElementById('f-kana').value.trim(),dob:document.getElementById('f-dob').value,phone:document.getElementById('f-phone').value.trim(),address:document.getElementById('f-address').value.trim(),status:document.getElementById('f-status').value,statusDate:document.getElementById('f-status-date').value,statusNote:document.getElementById('f-status-note').value.trim(),complaint:document.getElementById('f-complaint').value.trim(),goal:document.getElementById('f-goal').value.trim(),consent:getConsentData('f'),records:[]};const rec={date:document.getElementById('f-date').value,before:getDots('fb'),beforeNote:document.getElementById('f-before-note').value.trim(),after:getDots('fa'),afterNote:document.getElementById('f-after-note').value.trim(),content:document.getElementById('f-content').value.trim(),exercise:document.getElementById('f-exercise').value.trim(),nextdate:document.getElementById('f-nextdate').value,memo:document.getElementById('f-memo').value.trim()};if(rec.date||rec.content)client.records.push(rec);clients.unshift(client);save();if(photoBuf['f-before']?.length)await dbPut(photoKey(client.id,0,'before'),photoBuf['f-before']);if(photoBuf['f-after']?.length)await dbPut(photoKey(client.id,0,'after'),photoBuf['f-after']);clearForm();switchTab('list');}
+function clearForm(){['f-name','f-kana','f-dob','f-phone','f-address','f-status-note','f-complaint','f-goal','f-before-note','f-after-note','f-content','f-exercise','f-memo','f-status-date','f-nextdate'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('f-status').value='';document.getElementById('f-status-sub').style.display='none';document.getElementById('age-hint').textContent='';document.getElementById('f-date').value=today();clearPhotoBuf('f');document.getElementById('f-consent-toggle').checked=false;toggleConsentForm('f');document.querySelectorAll('.f-consent-check').forEach(c=>c.checked=false);}
+function openDetail(i){currentClientId=i;sortNewest=true;updateSortBtn();const c=clients[i];const age=calcAgeFrom(c.dob);document.getElementById('d-avatar').textContent=initials(c.name);document.getElementById('d-name').textContent=c.name+(c.kana?`　${c.kana}`:'');document.getElementById('d-meta').textContent=[age!==null?age+'歳':'',c.dob?c.dob+'生':'',c.phone].filter(Boolean).join('　');const sdl=c.status==='妊娠中'?'出産予定日':c.status==='産後'?'出産日':'';document.getElementById('d-basic').innerHTML=[['氏名',c.name+(c.kana?`（${c.kana}）`:'')],['生年月日',c.dob?`${c.dob}（${age!==null?age+'歳':'－'}）`:'－'],['連絡先',c.phone||'－'],['住所',c.address||'－'],['状態',c.status?`<span class="status-badge status-${c.status}">${c.status}</span>${c.statusNote?'　'+c.statusNote:''}`:'－'],sdl?[sdl,c.statusDate||'－']:null].filter(Boolean).map(([k,v])=>`<div style="color:#666;font-size:12px;">${k}</div><div style="font-size:13px;">${v}</div>`).join('');const noText='<span style="color:#aaa;">未記入</span>';document.getElementById('d-complaint').innerHTML=c.complaint?c.complaint.replace(/\n/g,'<br>'):noText;document.getElementById('d-goal').innerHTML=c.goal?c.goal.replace(/\n/g,'<br>'):noText;renderRecords(c);renderConsentDisplay(c);switchTab('detail');document.getElementById('view-detail').className='detail-view open';}
 function toggleSort(){sortNewest=!sortNewest;updateSortBtn();renderRecords(clients[currentClientId]);}
 function updateSortBtn(){document.getElementById('sort-icon').textContent=sortNewest?'↓':'↑';document.getElementById('sort-label').textContent=sortNewest?'新しい順':'古い順';}
 function dotsHTML(vals){return BODY_ITEMS.map((item,i)=>{const val=vals?(vals[i]||0):0;const dots=[1,2,3,4,5].map(n=>`<div class="mini-dot" style="background:${n<=val?'#003399':'#eee'};"></div>`).join('');return`<div class="ba-row"><span class="ba-item-label">${item}</span><div style="display:flex;gap:3px;align-items:center;">${dots}<span style="font-size:10px;color:#aaa;margin-left:3px;">${DOT_LABELS[val]||'－'}</span></div></div>`;}).join('');}
@@ -380,6 +547,108 @@ async function openEditRecord(recIdx){
   renderPreviews('r','after');
   document.getElementById('modal-record').className='modal-bg open';
 }
+
+
+function toggleConsentForm(prefix){
+  const on=document.getElementById(`${prefix}-consent-toggle`).checked;
+  const box=document.getElementById(`${prefix}-consent-box`);
+  if(box) box.style.display=on?'block':'none';
+}
+function getConsentData(prefix){
+  const toggle=document.getElementById(`${prefix}-consent-toggle`);
+  if(!toggle||!toggle.checked) return null;
+  const checks=document.querySelectorAll(`.${prefix}-consent-check`);
+  const allChecked=[...checks].every(c=>c.checked);
+  return {
+    required: true,
+    agreed: allChecked,
+    agreedAt: allChecked ? new Date().toISOString() : null
+  };
+}
+// チェック変化で同意日時をリアルタイム表示
+document.addEventListener('change', e=>{
+  if(e.target.classList.contains('f-consent-check')){
+    const checks=document.querySelectorAll('.f-consent-check');
+    const status=document.getElementById('f-consent-status');
+    if(!status)return;
+    const allChecked=[...checks].every(c=>c.checked);
+    if(allChecked){
+      const now=new Date();
+      status.textContent='✅ 同意日時：'+now.toLocaleDateString('ja-JP')+' '+now.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+      status.style.color='#003399';
+    } else {
+      status.textContent='全項目にチェックを入れると同意日時が記録されます';
+      status.style.color='#888';
+    }
+  }
+});
+function renderConsentDisplay(c){
+  const el=document.getElementById('d-consent-display');
+  if(!el)return;
+  if(!c.consent||!c.consent.required){el.innerHTML='';return;}
+  const agreed=c.consent.agreed;
+  const date=c.consent.agreedAt?new Date(c.consent.agreedAt).toLocaleDateString('ja-JP')+' '+new Date(c.consent.agreedAt).toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'}):'未同意';
+  el.innerHTML=`<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:${agreed?'#f0f4ff':'#fff8f0'};border-radius:8px;border:1px solid ${agreed?'#dde5ff':'#ffd9b0'};">
+    <span style="font-size:14px;">${agreed?'✅':'⚠️'}</span>
+    <div>
+      <div style="font-size:12px;font-weight:600;color:${agreed?'#003399':'#cc6600'};">同意書：${agreed?'確認済み':'未確認'}</div>
+      ${agreed?`<div style="font-size:11px;color:#666;">同意日時：${date}</div>`:''}
+    </div>
+  </div>`;
+}
+function toggleEbStatus(){
+  const s=document.getElementById('eb-status').value;
+  const sub=document.getElementById('eb-status-sub');
+  const lbl=document.getElementById('eb-status-label');
+  if(s==='妊娠中'){sub.style.display='block';lbl.textContent='出産予定日';}
+  else if(s==='産後'){sub.style.display='block';lbl.textContent='出産日';}
+  else{sub.style.display='none';}
+}
+function openEditBasic(){
+  const c=clients[currentClientId];
+  document.getElementById('eb-name').value=c.name||'';
+  document.getElementById('eb-kana').value=c.kana||'';
+  document.getElementById('eb-dob').value=c.dob||'';
+  document.getElementById('eb-phone').value=c.phone||'';
+  document.getElementById('eb-address').value=c.address||'';
+  document.getElementById('eb-status').value=c.status||'';
+  document.getElementById('eb-status-date').value=c.statusDate||'';
+  document.getElementById('eb-status-note').value=c.statusNote||'';
+  const age=calcAgeFrom(c.dob);
+  document.getElementById('eb-age-hint').textContent=age!==null?age+'歳':'';
+  toggleEbStatus();
+  document.getElementById('modal-edit-basic').className='modal-bg open';
+}
+function closeEditBasic(){document.getElementById('modal-edit-basic').className='modal-bg';}
+function saveEditBasic(){
+  const c=clients[currentClientId];
+  c.name=document.getElementById('eb-name').value.trim()||c.name;
+  c.kana=document.getElementById('eb-kana').value.trim();
+  c.dob=document.getElementById('eb-dob').value;
+  c.phone=document.getElementById('eb-phone').value.trim();
+  c.address=document.getElementById('eb-address').value.trim();
+  c.status=document.getElementById('eb-status').value;
+  c.statusDate=document.getElementById('eb-status-date').value;
+  c.statusNote=document.getElementById('eb-status-note').value.trim();
+  save();
+  openDetail(currentClientId);
+  closeEditBasic();
+}
+function openEditGoal(){
+  const c=clients[currentClientId];
+  document.getElementById('eg-complaint').value=c.complaint||'';
+  document.getElementById('eg-goal').value=c.goal||'';
+  document.getElementById('modal-edit-goal').className='modal-bg open';
+}
+function closeEditGoal(){document.getElementById('modal-edit-goal').className='modal-bg';}
+function saveEditGoal(){
+  const c=clients[currentClientId];
+  c.complaint=document.getElementById('eg-complaint').value.trim();
+  c.goal=document.getElementById('eg-goal').value.trim();
+  save();
+  openDetail(currentClientId);
+  closeEditGoal();
+}
 function closeModal(){document.getElementById('modal-record').className='modal-bg';}
 async function saveRecord(){
   const c=clients[currentClientId];
@@ -412,7 +681,7 @@ async function saveRecord(){
 }
 async function exportPDF(){const c=clients[currentClientId];const age=calcAgeFrom(c.dob);const sdl=c.status==='妊娠中'?'出産予定日':c.status==='産後'?'出産日':'';const recsWithPhotos=await Promise.all((c.records||[]).map(async(r,i)=>{const bPhotos=await dbGet(photoKey(c.id,i,'before'));const aPhotos=await dbGet(photoKey(c.id,i,'after'));return{...r,bPhotos,aPhotos,idx:i};}));const win=window.open('','_blank');if(!win){alert('ポップアップを許可してください');return;}function pdfDots(vals){return BODY_ITEMS.map((item,i)=>{const val=vals?(vals[i]||0):0;const dots=[1,2,3,4,5].map(n=>`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${n<=val?'#003399':'#ddd'};margin-right:2px;"></span>`).join('');return`<tr><td style="font-size:12px;color:#666;padding:3px 8px 3px 0;width:90px;">${item}</td><td style="padding:3px 0;">${dots}<span style="font-size:11px;color:#888;margin-left:4px;">${DOT_LABELS[val]||'－'}</span></td></tr>`;}).join('');}
 const recHTML=recsWithPhotos.map(r=>{const bPhotoHTML=r.bPhotos.length?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;">${r.bPhotos.map(u=>`<img src="${u}" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:4px;border:1px solid #eee;">`).join('')}</div>`:'';const aPhotoHTML=r.aPhotos.length?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;">${r.aPhotos.map(u=>`<img src="${u}" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:4px;border:1px solid #eee;">`).join('')}</div>`:'';return`<div style="border:1px solid #e5e5e5;border-radius:6px;padding:14px;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="font-size:11px;font-weight:600;padding:2px 9px;border-radius:4px;background:#dde5ff;color:#003399;">第${r.idx+1}回</span><span style="font-size:13px;font-weight:600;color:#222;">施術日：${r.date||'不明'}</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;"><div><div style="font-size:11px;font-weight:600;color:#003399;background:#dde5ff;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;">ビフォー（施術前）</div><table>${pdfDots(r.before)}</table>${r.beforeNote?`<div style="margin-top:6px;"><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">所見メモ（前）</div><div style="font-size:12px;color:#333;">${r.beforeNote}</div></div>`:''}</div><div><div style="font-size:11px;font-weight:600;color:#003399;background:#dde5ff;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;">アフター（施術後）</div><table>${pdfDots(r.after)}</table>${r.afterNote?`<div style="margin-top:6px;"><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">所見メモ（後）</div><div style="font-size:12px;color:#333;">${r.afterNote}</div></div>`:''}</div></div>${(bPhotoHTML||aPhotoHTML)?`<div style="border-top:1px solid #eee;margin:8px 0 4px;"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">${bPhotoHTML||'<div></div>'}${aPhotoHTML||'<div></div>'}</div>`:''}${r.content||r.exercise||r.memo?`<div style="border-top:1px solid #eee;margin:10px 0;"></div>`:''}${r.content?`<div style="margin-bottom:8px;"><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">施術内容</div><div style="font-size:13px;color:#222;">${r.content}</div></div>`:''}${r.exercise?`<div style="margin-bottom:8px;"><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">エクササイズ</div><div style="font-size:13px;color:#222;">${r.exercise}</div></div>`:''}${r.nextdate?`<div style="margin-bottom:8px;"><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">次回予約日</div><div style="font-size:13px;color:#222;">${r.nextdate}</div></div>`:''} ${r.memo?`<div><div style="font-size:11px;font-weight:600;color:#003399;margin-bottom:2px;">メモ・特記事項</div><div style="font-size:12px;color:#555;">${r.memo}</div></div>`:''}</div>`;}).join('');
-win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${c.name}　カルテ</title><style>body{font-family:sans-serif;padding:28px;color:#222;max-width:720px;margin:0 auto;}h1{font-size:19px;font-weight:600;border-bottom:1px solid #ddd;padding-bottom:8px;margin-bottom:14px;}h2{font-size:13px;font-weight:600;color:#555;margin:18px 0 8px;border-left:3px solid #003399;padding-left:8px;}table{border-collapse:collapse;}img{max-width:100%;}@media print{body{padding:16px;}}</style></head><body><h1>${c.name}　カルテ</h1><h2>基本情報</h2><table style="width:100%;"><tr><td style="color:#666;width:80px;padding:4px 0;">氏名</td><td style="padding:4px 12px 4px 0;">${c.name}${c.kana?'（'+c.kana+'）':''}</td><td style="color:#666;width:70px;padding:4px 0;">生年月日</td><td>${c.dob||'－'}${age!==null?'（'+age+'歳）':''}</td></tr><tr><td style="color:#666;padding:4px 0;">連絡先</td><td style="padding:4px 12px 4px 0;">${c.phone||'－'}</td><td style="color:#666;padding:4px 0;">住所</td><td>${c.address||'－'}</td></tr><tr><td style="color:#666;padding:4px 0;">状態</td><td colspan="3">${c.status||'－'}${c.statusNote?' （'+c.statusNote+'）':''}${sdl?' / '+sdl+'：'+(c.statusDate||'－'):''}</td></tr></table><h2>クライアントの訴えとゴール</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div><div style="font-size:11px;color:#888;margin-bottom:4px;">クライアントの訴え</div><div style="background:#f7f7f7;padding:8px 10px;border-radius:4px;font-size:13px;">${c.complaint||'－'}</div></div><div><div style="font-size:11px;color:#888;margin-bottom:4px;">目指したいゴール</div><div style="background:#f7f7f7;padding:8px 10px;border-radius:4px;font-size:13px;">${c.goal||'－'}</div></div></div><h2>施術記録（全${(c.records||[]).length}回）</h2>${recHTML}<script>window.print();<\/script></body></html>`);
+win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${c.name}　カルテ</title><style>body{font-family:sans-serif;padding:28px;color:#222;max-width:720px;margin:0 auto;}h1{font-size:19px;font-weight:600;border-bottom:1px solid #ddd;padding-bottom:8px;margin-bottom:14px;}h2{font-size:13px;font-weight:600;color:#555;margin:18px 0 8px;border-left:3px solid #003399;padding-left:8px;}table{border-collapse:collapse;}img{max-width:100%;}@media print{body{padding:16px;}}</style></head><body><h1>${c.name}　カルテ</h1><h2>基本情報</h2><table style="width:100%;"><tr><td style="color:#666;width:80px;padding:4px 0;">氏名</td><td style="padding:4px 12px 4px 0;">${c.name}${c.kana?'（'+c.kana+'）':''}</td><td style="color:#666;width:70px;padding:4px 0;">生年月日</td><td>${c.dob||'－'}${age!==null?'（'+age+'歳）':''}</td></tr><tr><td style="color:#666;padding:4px 0;">連絡先</td><td style="padding:4px 12px 4px 0;">${c.phone||'－'}</td><td style="color:#666;padding:4px 0;">住所</td><td>${c.address||'－'}</td></tr><tr><td style="color:#666;padding:4px 0;">状態</td><td colspan="3">${c.status||'－'}${c.statusNote?' （'+c.statusNote+'）':''}${sdl?' / '+sdl+'：'+(c.statusDate||'－'):''}</td></tr>${c.consent&&c.consent.required?`<tr><td style="color:#666;padding:4px 0;">同意書</td><td colspan="3">${c.consent.agreed?'確認済み（'+new Date(c.consent.agreedAt).toLocaleDateString('ja-JP')+'）':'未確認'}</td></tr>`:''}</table><h2>クライアントの訴えとゴール</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"><div><div style="font-size:11px;color:#888;margin-bottom:4px;">クライアントの訴え</div><div style="background:#f7f7f7;padding:8px 10px;border-radius:4px;font-size:13px;">${c.complaint||'－'}</div></div><div><div style="font-size:11px;color:#888;margin-bottom:4px;">目指したいゴール</div><div style="background:#f7f7f7;padding:8px 10px;border-radius:4px;font-size:13px;">${c.goal||'－'}</div></div></div><h2>施術記録（全${(c.records||[]).length}回）</h2>${recHTML}<script>window.print();<\/script></body></html>`);
 win.document.close();}
 
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
